@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Watchlist_App</title>
+  <!-- Chargement de la bibliothèque Parse -->
+  <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+  <!-- Inclusion de la feuille de style -->
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <!-- Initialisation de Parse -->
+  <script type="text/javascript">
+    Parse.initialize('LjDVBXL587mot4HRtDYB0fk4Tgmivedoq2j1brZL', 'JLjmD00F6e4bh6aGaEJGYu1OOFIvoQE168dn3TXG');
+    Parse.serverURL = 'https://parseapi.back4app.com/';
+  </script>
+</head>
+<body>
+  <!-- En-tête -->
+  <div id="header">
+    <h1>Watchlist</h1>
+  </div>
+  
+  <!-- Conteneur de la liste de films -->
+  <div id="movieContainer">
+    <ul id="movieList">
+      <!-- Les éléments de film seront ajoutés ici dynamiquement -->
+    </ul>
+  </div>
+
+  <!-- Formulaire d'ajout de film -->
+  <div id="infMovie">
+    <label for="title">Movie Title:</label>
+    <input type="text" id="title" />
+    <label for="year">Release Year:</label>
+    <input type="number" id="year" />
+    <label for="watched">Watched:</label>
+    <input type="checkbox" id="watched" />
+  </div>
+
+  <!-- Boutons d'action -->
+  <div id="btn">
+    <button id="addMovie">Add Movie</button>
+    <button id="deleteMovie">Delete Movie</button>
+  </div>
+
+  <!-- Script JavaScript -->
+  <script type="text/javascript">
+    // Fonction pour ajouter un film
+    async function addMovie(title, year, watched) {
+      const ListFilm = Parse.Object.extend('Movie');
+      const movie = new ListFilm();
+      movie.set('name', title);
+      movie.set('releaseYear', year);
+      movie.set('isWatched', watched);
+
+      await movie.save();
+      fetchMovies(); // Met à jour la liste des films après l'ajout
+    }
+
+    // Fonction pour afficher la liste des films
+    async function fetchMovies() {
+      const query = new Parse.Query('Movie');
+      const movies = await query.find();
+      const movieList = document.getElementById('movieList');
+      movieList.innerHTML = '';
+
+      // Parcourt les films et les ajoute à la liste
+      movies.forEach(movie => {
+        const listItem = document.createElement('li');
+        const watchedStatus = movie.get('isWatched');
+        
+        const icon = document.createElement('span');
+        icon.textContent = watchedStatus ? '✔️' : '❌';
+        icon.style.color = watchedStatus ? 'green' : 'red';
+        
+        listItem.appendChild(icon);
+        listItem.appendChild(document.createTextNode(`${movie.get('name')} (${movie.get('releaseYear')})`));
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.setAttribute('data-movie-id', movie.id);
+        listItem.appendChild(checkbox);
+        
+        movieList.appendChild(listItem);
+      });
+    }
+
+    // Écouteur d'événement pour ajouter un film
+    document.getElementById('addMovie').addEventListener('click', async () => {
+      const title = document.getElementById('title').value;
+      const year = parseInt(document.getElementById('year').value);
+      const watched = document.getElementById('watched').checked;
+
+      if (title && year) {
+        await addMovie(title, year, watched);
+        // Réinitialisation des champs après l'ajout du film
+        document.getElementById('title').value = '';
+        document.getElementById('year').value = '';
+        document.getElementById('watched').checked = false;
+      }
+    });
+
+    // Écouteur d'événement pour supprimer les films sélectionnés
+    document.getElementById('deleteMovie').addEventListener('click', deleteSelectedMovies);
+    async function deleteSelectedMovies() {
+      const selectedMovies = document.querySelectorAll('#movieList li input[type="checkbox"]:checked');
+  
+      for (const checkbox of selectedMovies) {
+        const movieId = checkbox.getAttribute('data-movie-id');
+        if (movieId) {
+          const movie = await new Parse.Query('Movie').get(movieId);
+          await movie.destroy();
+        }
+      }
+
+      fetchMovies(); // Met à jour la liste des films après la suppression
+    }
+
+    // Charge initiale : affiche la liste des films
+    window.onload = fetchMovies;
+  </script>
+</body>
+</html>
