@@ -1,0 +1,87 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    color: black;
+    font-family: Arial, sans-serif;
+  }
+  
+  #header {
+    background-color: rgb(29, 37, 68);
+    padding: 10px;
+    color: white;
+    height: 50px;
+  }
+
+  #header h1 {
+    font-size: 24px;
+  }
+  
+  #movieContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(50vh - 80px); /* Ajustez la hauteur pour garder l'espace pour le titre */
+    background-color: white;
+    padding: 0;
+    border-radius: 10px;
+  }
+  
+  #infMovie {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 5px;
+    border-radius: 10px; 
+    font-size: 17px;
+    margin-right: 5px;
+  }
+
+  #infMovie label {
+    margin-right: 5px;
+    margin-left: 15px;
+    font-size: 17px;
+  }
+
+  #movieList {
+    list-style: none;
+    padding: 50px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  #movieList li {
+    margin: 10px 0;
+    font-size: 17px;
+  }
+  
+  #btn {
+    padding-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-size: 17px;
+  }
+  
+  #btn button {
+    margin-right: 15px;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    color: white;
+    font-weight: bold;
+  }
+
+  #addMovie {
+    background-color: rgb(29, 37, 68);
+  }
+  
+  #deleteMovie {
+    background-color: rgb(221, 32, 32);
+  }
