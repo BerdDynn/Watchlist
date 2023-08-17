@@ -17,7 +17,8 @@ The following **required** functionality is completed:
 
 ## Development server
 
-* Clone repository
+* Clone repository `git clone https://github.com/BerdDynn/Watchlist.git`
+* Install parse `npm install parse`
 * Open the project with `VS code` IDE
 * User can run the project
 
